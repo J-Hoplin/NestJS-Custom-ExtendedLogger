@@ -14,6 +14,17 @@ export global {
   type LoggerConfig = {
     contextName: string;
     logfileDirectory?: string;
+    saveAsFile?: boolean;
     levelNTimestamp?: ConsoleLoggerOptions;
   };
+
+  type LoggerReturn = {
+    message: string;
+    saveAsFile: boolean;
+  };
+
+  type forFeatureParamType = Omit<
+    LoggerConfig,
+    'logfileDirectory' | 'levelNTimestamp' | 'saveAsFile'
+  >;
 }

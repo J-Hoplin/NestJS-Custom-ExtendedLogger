@@ -6,10 +6,11 @@ import { LoggerModule } from './logger/logger.module';
 @Module({
   imports: [
     LoggerModule.forRoot({
-      contextName: AppService.name,
+      contextName: 'App Serivce',
       logfileDirectory: `${__dirname}/../`,
+      saveAsFile: true,
       levelNTimestamp: {
-        logLevels: ['log'],
+        logLevels: ['debug'],
         timestamp: true,
       },
     }),

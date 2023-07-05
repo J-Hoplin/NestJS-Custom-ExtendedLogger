@@ -17,9 +17,7 @@ export class LoggerModule {
       exports: [Logger],
     };
   }
-  public static forFeature(
-    loggerOption: Omit<LoggerConfig, 'logfileDirectory' | 'levelNTimestamp'>,
-  ): DynamicModule {
+  public static forFeature(loggerOption: forFeatureParamType): DynamicModule {
     return {
       module: LoggerModule,
       providers: [

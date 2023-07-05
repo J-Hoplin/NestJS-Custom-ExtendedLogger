@@ -34,8 +34,11 @@ export function saveLog2File(
         case 'log':
         case 'verbose':
         case 'warn':
-          const message = originalMethod.apply(this, params);
-          if (message) {
+          const { message, saveAsFile }: LoggerReturn = originalMethod.apply(
+            this,
+            params,
+          );
+          if (message && saveAsFile) {
             await save(key, message);
           }
 
