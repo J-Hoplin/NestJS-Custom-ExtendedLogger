@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Res,
 } from '@nestjs/common';
 import { ExampleService } from './example.service';
 import { CreateExampleDto } from './dto/create-example.dto';
 import { UpdateExampleDto } from './dto/update-example.dto';
+import { Response } from 'express';
 
 @Controller('example')
 export class ExampleController {
@@ -20,9 +22,14 @@ export class ExampleController {
     return this.exampleService.create(createExampleDto);
   }
 
-  @Get()
-  findAll() {
-    return this.exampleService.findAll();
+  @Get('/warn-code')
+  findAll(@Res() res: Response) {
+    return res.status(400).json({});
+  }
+
+  @Get('/error-code')
+  errorCode(@Res() res: Response) {
+    return res.status(500).json({});
   }
 
   @Get(':id')

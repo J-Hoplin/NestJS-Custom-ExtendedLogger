@@ -19,7 +19,7 @@ const DEFAULT_LOG_LEVELS: LogLevel[] = [
 @Injectable()
 export class Logger extends ConsoleLogger implements Logs {
   private static loggerInstance: Logger;
-  private static logLimit: LogLevel[] = DEFAULT_LOG_LEVELS;
+  // private static logLimit: LogLevel[] = DEFAULT_LOG_LEVELS;
   private static saveAsFile: boolean;
 
   private constructor(
@@ -33,37 +33,31 @@ export class Logger extends ConsoleLogger implements Logs {
     }
   }
 
-  public static getInstance(config?: LoggerConfig) {
+  public static getLogger(config?: loggerForRootParam) {
     if (!config) {
       if (!this.loggerInstance) {
         throw new LoggerNotConfigured();
       }
       return Logger.loggerInstance;
     }
-    const {
-      contextName,
-      logfileDirectory,
-      saveAsFile: saveAsFileOption,
-      levelNTimestamp,
-    } = config;
-    // forRoot called
-    if (saveAsFileOption) {
+    const { applicationName, levelNTimestamp } = config;
+    let saveAsFileOption: boolean;
+    let logfileDirectory: string;
+    if ('saveAsFile' in config) {
+      saveAsFileOption = config.saveAsFile;
+      logfileDirectory = config.logfileDirectory;
+
       if (!logfileDirectory) {
         throw new LogfileDirectoryNotGiven();
       }
-      Logger.saveAsFile = saveAsFileOption ? saveAsFileOption : false;
+      Logger.saveAsFile = saveAsFileOption;
       if (Logger.saveAsFile) {
         init(logfileDirectory);
       }
-      Logger.logLimit = levelNTimestamp.logLevels
-        ? levelNTimestamp.logLevels
-        : DEFAULT_LOG_LEVELS;
-      Logger.loggerInstance = new Logger(contextName, levelNTimestamp);
-    }
-    // forFeature called
-    else {
+      Logger.loggerInstance = new Logger(applicationName, levelNTimestamp);
+    } else {
       Logger.saveAsFile = false;
-      Logger.loggerInstance = new Logger(contextName);
+      Logger.loggerInstance = new Logger(applicationName, levelNTimestamp);
     }
     return Logger.loggerInstance;
   }

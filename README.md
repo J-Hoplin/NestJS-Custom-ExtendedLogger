@@ -6,68 +6,107 @@
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## NestJS custom logger
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Extended NestJS Logger, Based on NestJS common logger. Log messages also follow Nest embedded style
 
-## Installation
+- Support logfile
+- Able to use logger with Dependency Injection
+- Compatible with existing logging module
+- Global request flow
 
-```bash
-$ yarn install
+## How to Use?
+
+1. Clone this repository
+
+```
+git clone https://github.com/J-hoplin1/NestJS-Custom-Logger.git
+
+cd NestJS-Custom-Logger
 ```
 
-## Running the app
+2. Copy `logger` in root directory of repository.(or `src/logger`)
+3. Paste to your NestJS Modules directory(which same as `src`)
 
-```bash
-# development
-$ yarn run start
+## Start logger
 
-# watch mode
-$ yarn run start:dev
+To use this logger, you need to import `LoggerModule` to `app.module.ts` via `.forRoot()` method.
 
-# production mode
-$ yarn run start:prod
+```typescript
+
+@Module({
+  imports: [
+    LoggerModule.forRoot({
+      applicationName: 'Logger Test',
+      logfileDirectory: `${__dirname}/../`,
+      saveAsFile: true,
+      levelNTimestamp: {
+        logLevels: ['log'],
+        timestamp: true,
+      },
+    }),
+  ],
+
+...
 ```
 
-## Test
+`forRoot()` require some options. You can give two types of options, and each options refer to description under below
 
-```bash
-# unit tests
-$ yarn run test
+- `applicationName` - string
+  - Name of application to be printed in the log message
+- `saveAsFile` (optional) - boolean
+  - `true` if you want to save log as logfile. **If it's `true`, option `logfileDirectory` is not optional**
+- `logfileDirectory` (optional) - string
+  - Directory where logfile will be saved.
+- `levelNTimestamp`
+  - `logLevels`(optional) - LogLevel[]
+    - log level array. This work as same as NestJS Logger
+  - `timestamp`(optional) - boolean
+    - Check if logger print timestamp. `timestamp` mean, between current and previous log message.
 
-# e2e tests
-$ yarn run test:e2e
+For log level please refer json underbelow
 
-# test coverage
-$ yarn run test:cov
+```javascript
+{
+  verbose: 0,
+  debug: 1,
+  log: 2,
+  warn: 3,
+  error: 4,
+};
 ```
 
-## Support
+after initialize logger with `.forRoot()`, You can import `LoggerModule` from other Moduels throgh `forFeature()` and make DI to Injectable object
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```typescript
+// example.module.ts
+@Module({
+  imports: [LoggerModule.forFeature()]
 
-## Stay in touch
+...
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+// example.service.ts
+@Injectable()
+export class ExampleService {
+  constructor(private readonly logger: Logger) {}
+```
 
-## License
+## Global request / response flow interceptor
 
-Nest is [MIT licensed](LICENSE).
+If you want to log to console about every request, use [`FlowInterceptor`](./src/logger/logger.interceptor.ts). You can both register globally or you can use it with `@UseInterceptor()` decorator, which NestJS provide
+
+```typescript
+// main.ts
+import { FlowInterceptor } from './logger/logger.interceptor';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  ...
+```
+
+## Example Log Message
+
+- Enable Flow Interceptor globally
+
+![img](./img/logger.png)

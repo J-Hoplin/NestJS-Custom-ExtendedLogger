@@ -8,7 +8,7 @@ import { ExampleModule } from './example/example.module';
 @Module({
   imports: [
     LoggerModule.forRoot({
-      contextName: 'Cloud education API',
+      applicationName: 'Logger Test',
       logfileDirectory: `${__dirname}/../`,
       saveAsFile: true,
       levelNTimestamp: {

@@ -12,9 +12,9 @@ export global {
   type LogLevels = keyof Logs;
 
   type LoggerConfig = {
-    contextName: string;
-    logfileDirectory?: string;
-    saveAsFile?: boolean;
+    applicationName: string;
+    logfileDirectory: string;
+    saveAsFile: boolean;
     levelNTimestamp?: ConsoleLoggerOptions;
   };
 
@@ -23,8 +23,7 @@ export global {
     saveAsFile: boolean;
   };
 
-  type forFeatureParamType = Omit<
-    LoggerConfig,
-    'logfileDirectory' | 'levelNTimestamp' | 'saveAsFile'
-  >;
+  type loggerForRootParam =
+    | LoggerConfig
+    | Omit<LoggerConfig, 'saveAsFile' | 'logfileDirectory'>;
 }

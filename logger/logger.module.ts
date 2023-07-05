@@ -4,13 +4,13 @@ import { log } from 'console';
 
 @Module({})
 export class LoggerModule {
-  public static forRoot(loggerOption: LoggerConfig): DynamicModule {
+  public static forRoot(loggerOption: loggerForRootParam): DynamicModule {
     return {
       module: LoggerModule,
       providers: [
         {
           useFactory: () => {
-            return Logger.getInstance(loggerOption);
+            return Logger.getLogger(loggerOption);
           },
           provide: Logger,
         },
@@ -24,7 +24,7 @@ export class LoggerModule {
       providers: [
         {
           useFactory: () => {
-            return Logger.getInstance();
+            return Logger.getLogger();
           },
           provide: Logger,
         },
