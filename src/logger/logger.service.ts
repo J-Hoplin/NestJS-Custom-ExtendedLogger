@@ -1,6 +1,12 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import {
+  ConsoleLogger,
+  ConsoleLoggerOptions,
+  Injectable,
+} from '@nestjs/common';
 import { saveLog2File, init } from './decorator/save.decorator';
 import { LogLevel } from '@nestjs/common';
+import { LogfileDirectoryNotGiven } from './exception/LogFileDirectoryNotGiven.exception';
+import { LoggerNotConfigured } from './exception/LoggerNotConfigured.exception';
 
 const DEFAULT_LOG_LEVELS: LogLevel[] = [
   'log',
@@ -16,34 +22,54 @@ export class Logger extends ConsoleLogger implements Logs {
   private static logLimit: LogLevel[] = DEFAULT_LOG_LEVELS;
   private static saveAsFile: boolean;
 
-  public constructor({ contextName }: forFeatureParamType);
-  public constructor({
-    contextName,
-    logfileDirectory,
-    saveAsFile,
-    levelNTimestamp,
-  }: LoggerConfig) {
-    const defaultContextName = 'Unknown-Context';
-    if (!contextName) {
-      contextName = defaultContextName;
-    }
-    // init when forRoot called
-    if (logfileDirectory) {
-      Logger.saveAsFile = saveAsFile ? saveAsFile : false;
-      if (Logger.saveAsFile) {
-        init(logfileDirectory);
-      }
-      Logger.logLimit = levelNTimestamp.logLevels
-        ? levelNTimestamp.logLevels
-        : DEFAULT_LOG_LEVELS;
+  private constructor(
+    contextName: string,
+    levelNTimestamp?: ConsoleLoggerOptions | undefined,
+  ) {
+    if (levelNTimestamp) {
       super(contextName, levelNTimestamp);
     } else {
       super(contextName);
     }
   }
 
+  public static getInstance(config?: LoggerConfig) {
+    if (!config) {
+      if (!this.loggerInstance) {
+        throw new LoggerNotConfigured();
+      }
+      return Logger.loggerInstance;
+    }
+    const {
+      contextName,
+      logfileDirectory,
+      saveAsFile: saveAsFileOption,
+      levelNTimestamp,
+    } = config;
+    // forRoot called
+    if (saveAsFileOption) {
+      if (!logfileDirectory) {
+        throw new LogfileDirectoryNotGiven();
+      }
+      Logger.saveAsFile = saveAsFileOption ? saveAsFileOption : false;
+      if (Logger.saveAsFile) {
+        init(logfileDirectory);
+      }
+      Logger.logLimit = levelNTimestamp.logLevels
+        ? levelNTimestamp.logLevels
+        : DEFAULT_LOG_LEVELS;
+      Logger.loggerInstance = new Logger(contextName, levelNTimestamp);
+    }
+    // forFeature called
+    else {
+      Logger.saveAsFile = false;
+      Logger.loggerInstance = new Logger(contextName);
+    }
+    return Logger.loggerInstance;
+  }
+
   /**
-   * Reference : https://github.com/nestjs/nest/blob/master/packages/common/services/console-logger.service.ts#L183
+   * Reference : https://github.com/nestjs/nest/blob/master/packages/common/services/console-logger.service.ts
    */
   private returnGetConsolePrintString(
     message: unknown,
@@ -65,6 +91,11 @@ export class Logger extends ConsoleLogger implements Logs {
     return formattedMessage;
   }
 
+  /**
+   *
+   * @param message
+   * @param context
+   */
   log(message: any, context?: string): void;
   log(message: any, ...optionalParams: any[]): void;
   @saveLog2File
@@ -80,6 +111,12 @@ export class Logger extends ConsoleLogger implements Logs {
       saveAsFile: Logger.saveAsFile,
     };
   }
+
+  /**
+   *
+   * @param message
+   * @param stackOrContext
+   */
   error(message: any, stackOrContext?: string): void;
   error(message: any, stack?: string, context?: string): void;
   error(message: any, ...optionalParams: any[]): void;
@@ -102,13 +139,32 @@ export class Logger extends ConsoleLogger implements Logs {
     };
   }
 
+  /**
+   *
+   * @param message
+   * @param context
+   */
   warn(message: any, context?: string): void;
   warn(message: any, ...optionalParams: any[]): void;
   @saveLog2File
-  warn(message: unknown, context?: unknown, ...rest: unknown[]): string {
+  warn(message: unknown, context?: unknown, ...rest: unknown[]): LoggerReturn {
     super.warn.call(this, message);
-    return this.returnGetConsolePrintString(message, context as string, 'warn');
+    const msg = this.returnGetConsolePrintString(
+      message,
+      context as string,
+      'warn',
+    );
+    return {
+      message: msg,
+      saveAsFile: Logger.saveAsFile,
+    };
   }
+
+  /**
+   *
+   * @param message
+   * @param context
+   */
   debug(message: any, context?: string): void;
   debug(message: any, ...optionalParams: any[]): void;
   @saveLog2File

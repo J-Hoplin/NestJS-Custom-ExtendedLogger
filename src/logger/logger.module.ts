@@ -1,5 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { Logger } from './logger.service';
+import { log } from 'console';
 
 @Module({})
 export class LoggerModule {
@@ -9,7 +10,7 @@ export class LoggerModule {
       providers: [
         {
           useFactory: () => {
-            return new Logger(loggerOption);
+            return Logger.getInstance(loggerOption);
           },
           provide: Logger,
         },
@@ -17,17 +18,18 @@ export class LoggerModule {
       exports: [Logger],
     };
   }
-  public static forFeature(loggerOption: forFeatureParamType): DynamicModule {
+  public static forFeature(): DynamicModule {
     return {
       module: LoggerModule,
       providers: [
         {
           useFactory: () => {
-            return new Logger(loggerOption);
+            return Logger.getInstance();
           },
           provide: Logger,
         },
       ],
+      exports: [Logger],
     };
   }
 }

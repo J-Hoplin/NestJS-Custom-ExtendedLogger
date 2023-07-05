@@ -2,7 +2,7 @@ import { Logger } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import { existsSync, createWriteStream } from 'fs';
 
-let logfileDirectory = `${__dirname}/../../../logfile`;
+let logfileDirectory: string;
 const logFileName = {
   errorLog: 'error.log',
   commonLog: 'common.log',
@@ -11,7 +11,7 @@ const logFileName = {
 };
 
 export function init(directory: string) {
-  logfileDirectory = directory ? `${directory}/logfile` : logfileDirectory;
+  logfileDirectory = `${directory}/logfile`;
   if (!existsSync(logfileDirectory)) {
     fs.mkdir(logfileDirectory);
   }
@@ -39,7 +39,9 @@ export function saveLog2File(
             params,
           );
           if (message && saveAsFile) {
-            await save(key, message);
+            try {
+              await save(key, message);
+            } catch (err) {}
           }
 
           break;
