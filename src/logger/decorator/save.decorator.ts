@@ -35,7 +35,10 @@ export function saveLog2File(
         case 'verbose':
         case 'warn':
           const message = originalMethod.apply(this, params);
-          await save(key, message);
+          if (message) {
+            await save(key, message);
+          }
+
           break;
         default:
           return;

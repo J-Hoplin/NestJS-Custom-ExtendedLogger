@@ -17,6 +17,7 @@ const DEFAULT_LOG_LEVELS: LogLevel[] = [
 @Injectable()
 export class Logger extends ConsoleLogger implements Logs {
   private static loggerInstance: Logger;
+  private static logLimit: LogLevel[] = DEFAULT_LOG_LEVELS;
 
   public constructor({
     contextName,
@@ -33,9 +34,12 @@ export class Logger extends ConsoleLogger implements Logs {
     // init when forRoot called
     if (logfileDirectory) {
       init(logfileDirectory);
-      super(contextName);
-    } else {
+      Logger.logLimit = levelNTimestamp.logLevels
+        ? levelNTimestamp.logLevels
+        : DEFAULT_LOG_LEVELS;
       super(contextName, levelNTimestamp);
+    } else {
+      super(contextName);
     }
   }
 
