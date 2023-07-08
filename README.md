@@ -102,6 +102,7 @@ import { FlowInterceptor } from './logger/logger.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalInterceptors(new FlowInterceptor());
   ...
 ```
 
