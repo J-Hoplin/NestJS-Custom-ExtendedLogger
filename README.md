@@ -13,6 +13,7 @@ npm i @hoplin/nestjs-logger
 
 yarn add @hoplin/nestjs-logger
 ```
+
 ## NestJS custom logger
 
 Extended NestJS Logger, Based on NestJS common logger. Log messages also follow Nest embedded style
