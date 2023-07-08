@@ -96,6 +96,7 @@ import { LoggerModule } from '@hoplin/nestjs-logger';
   imports: [LoggerModule.forFeature()]
 
 ...
+import { Logger } from '@hoplin/nestjs-logger';
 
 // example.service.ts
 @Injectable()
@@ -109,7 +110,7 @@ If you want to log to console about every request, use [`FlowInterceptor`](./src
 
 ```typescript
 // main.ts
-import { FlowInterceptor } from './logger/logger.interceptor';
+import { FlowInterceptor } from '@hoplin/nestjs-logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
