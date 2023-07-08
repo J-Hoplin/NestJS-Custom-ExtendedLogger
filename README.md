@@ -6,7 +6,13 @@
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+## Install with npm or yarn
 
+```
+npm i @hoplin/nestjs-logger
+
+yarn add @hoplin/nestjs-logger
+```
 ## NestJS custom logger
 
 Extended NestJS Logger, Based on NestJS common logger. Log messages also follow Nest embedded style
