@@ -24,19 +24,6 @@ Extended NestJS Logger, Based on NestJS common logger. Log messages also follow 
 - Compatible with existing logging module
 - Global request flow
 
-## How to Use?
-
-1. Clone this repository
-
-```
-git clone https://github.com/J-hoplin1/NestJS-Custom-Logger.git
-
-cd NestJS-Custom-Logger
-```
-
-2. Copy `logger` in root directory of repository.(or `src/logger`)
-3. Paste to your NestJS Modules directory(which same as `src`)
-
 ## Start logger
 
 To use this logger, you need to import `LoggerModule` to `app.module.ts` via `.forRoot()` method.
