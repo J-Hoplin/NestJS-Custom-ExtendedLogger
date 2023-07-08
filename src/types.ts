@@ -1,4 +1,4 @@
-import { ConsoleLoggerOptions } from "@nestjs/common";
+import { ConsoleLoggerOptions } from '@nestjs/common';
 
 export type loggerfn = (...args: any[]) => any;
 export interface Logs {
@@ -24,4 +24,4 @@ export type LoggerReturn = {
 
 export type loggerForRootParam =
   | LoggerConfig
-  | Omit<LoggerConfig, "saveAsFile" | "logfileDirectory">;
+  | Omit<LoggerConfig, 'saveAsFile' | 'logfileDirectory'>;
