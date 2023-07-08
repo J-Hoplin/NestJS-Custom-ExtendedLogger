@@ -2,19 +2,19 @@ import {
   ConsoleLogger,
   ConsoleLoggerOptions,
   Injectable,
-} from "@nestjs/common";
-import { saveLog2File, init } from "./decorator/save.decorator";
-import { LogLevel } from "@nestjs/common";
-import { LogfileDirectoryNotGiven } from "./exception/LogFileDirectoryNotGiven.exception";
-import { LoggerNotConfigured } from "./exception/LoggerNotConfigured.exception";
-import { Logs, loggerForRootParam, LogLevels, LoggerReturn } from "./types";
+} from '@nestjs/common';
+import { saveLog2File, init } from './decorator/save.decorator';
+import { LogLevel } from '@nestjs/common';
+import { LogfileDirectoryNotGiven } from './exception/LogFileDirectoryNotGiven.exception';
+import { LoggerNotConfigured } from './exception/LoggerNotConfigured.exception';
+import { Logs, loggerForRootParam, LogLevels, LoggerReturn } from './types';
 
 const DEFAULT_LOG_LEVELS: LogLevel[] = [
-  "log",
-  "error",
-  "warn",
-  "debug",
-  "verbose",
+  'log',
+  'error',
+  'warn',
+  'debug',
+  'verbose',
 ];
 
 @Injectable()
@@ -25,7 +25,7 @@ export class Logger extends ConsoleLogger implements Logs {
 
   private constructor(
     contextName: string,
-    levelNTimestamp?: ConsoleLoggerOptions | undefined
+    levelNTimestamp?: ConsoleLoggerOptions | undefined,
   ) {
     if (levelNTimestamp) {
       super(contextName, levelNTimestamp);
@@ -44,7 +44,7 @@ export class Logger extends ConsoleLogger implements Logs {
     const { applicationName, levelNTimestamp } = config;
     let saveAsFileOption: boolean;
     let logfileDirectory: string;
-    if ("saveAsFile" in config) {
+    if ('saveAsFile' in config) {
       saveAsFileOption = config.saveAsFile;
       logfileDirectory = config.logfileDirectory;
 
@@ -68,20 +68,20 @@ export class Logger extends ConsoleLogger implements Logs {
    */
   private returnGetConsolePrintString(
     message: unknown,
-    context = "",
-    logLevel: LogLevels = "log"
+    context = '',
+    logLevel: LogLevels = 'log',
   ): string {
     const pidMessage = this.formatPid(process.pid);
     const contextMessage = this.formatContext(context);
     const timestampDiff = this.updateAndGetTimestampDiff();
-    const formattedLogLevel = logLevel.toUpperCase().padStart(7, " ");
+    const formattedLogLevel = logLevel.toUpperCase().padStart(7, ' ');
     const formattedMessage = this.formatMessage(
       logLevel,
       message,
       pidMessage,
       formattedLogLevel,
       contextMessage,
-      timestampDiff
+      timestampDiff,
     );
     return formattedMessage;
   }
@@ -99,7 +99,7 @@ export class Logger extends ConsoleLogger implements Logs {
     const msg = this.returnGetConsolePrintString(
       message,
       context as string,
-      "log"
+      'log',
     );
     return {
       message: msg,
@@ -126,7 +126,7 @@ export class Logger extends ConsoleLogger implements Logs {
     const msg = this.returnGetConsolePrintString(
       message,
       context as string,
-      "error"
+      'error',
     );
     return {
       message: msg,
@@ -147,7 +147,7 @@ export class Logger extends ConsoleLogger implements Logs {
     const msg = this.returnGetConsolePrintString(
       message,
       context as string,
-      "warn"
+      'warn',
     );
     return {
       message: msg,
@@ -168,7 +168,7 @@ export class Logger extends ConsoleLogger implements Logs {
     const msg = this.returnGetConsolePrintString(
       message,
       context as string,
-      "debug"
+      'debug',
     );
     return {
       message: msg,
@@ -187,7 +187,7 @@ export class Logger extends ConsoleLogger implements Logs {
     const msg = this.returnGetConsolePrintString(
       message,
       context as string,
-      "verbose"
+      'verbose',
     );
     return {
       message: msg,

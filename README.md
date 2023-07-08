@@ -42,6 +42,7 @@ cd NestJS-Custom-Logger
 To use this logger, you need to import `LoggerModule` to `app.module.ts` via `.forRoot()` method.
 
 ```typescript
+import { LoggerModule } from '@hoplin/nestjs-logger';
 
 @Module({
   imports: [
@@ -88,6 +89,8 @@ For log level please refer json underbelow
 after initialize logger with `.forRoot()`, You can import `LoggerModule` from other Moduels throgh `forFeature()` and make DI to Injectable object
 
 ```typescript
+import { LoggerModule } from '@hoplin/nestjs-logger';
+
 // example.module.ts
 @Module({
   imports: [LoggerModule.forFeature()]

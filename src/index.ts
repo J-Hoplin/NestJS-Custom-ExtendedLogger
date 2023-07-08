@@ -1,4 +1,5 @@
-import { LoggerModule } from "./logger.module";
-import { FlowInterceptor } from "./logger.interceptor";
+import { LoggerModule } from './logger.module';
+import { FlowInterceptor } from './logger.interceptor';
+import { Logger } from './logger.service';
 
-export { LoggerModule, FlowInterceptor };
+export { LoggerModule, FlowInterceptor, Logger };
