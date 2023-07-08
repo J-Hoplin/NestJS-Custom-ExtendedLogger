@@ -1,6 +1,6 @@
 {
   "name": "@hoplin/nestjs-logger",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Extended custom Nest.js logger with pure Nest.js logger type",
   "main": "dist/index.js",
   "repository": {
