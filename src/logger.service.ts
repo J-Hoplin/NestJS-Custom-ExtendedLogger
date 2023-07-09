@@ -44,7 +44,8 @@ export class Logger extends ConsoleLogger implements Logs {
     const { applicationName, levelNTimestamp } = config;
     let saveAsFileOption: boolean;
     let logfileDirectory: string;
-    if ('saveAsFile' in config) {
+    // Check if 'saveAsFile' in option and it's true
+    if ('saveAsFile' in config && config.saveAsFile) {
       saveAsFileOption = config.saveAsFile;
       logfileDirectory = config.logfileDirectory;
 

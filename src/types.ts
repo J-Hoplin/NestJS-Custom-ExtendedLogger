@@ -10,18 +10,18 @@ export interface Logs {
 }
 export type LogLevels = keyof Logs;
 
-export type LoggerConfig = {
+export interface LoggerConfig {
   applicationName: string;
-  logfileDirectory: string;
-  saveAsFile: boolean;
   levelNTimestamp?: ConsoleLoggerOptions;
-};
+}
+export interface LoggerConfigSave extends LoggerConfig {
+  saveAsFile: boolean;
+  logfileDirectory: string;
+}
 
 export type LoggerReturn = {
   message: string;
   saveAsFile: boolean;
 };
 
-export type loggerForRootParam =
-  | LoggerConfig
-  | Omit<LoggerConfig, 'saveAsFile' | 'logfileDirectory'>;
+export type loggerForRootParam = LoggerConfig | LoggerConfigSave;
